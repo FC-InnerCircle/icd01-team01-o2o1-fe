@@ -31,6 +31,10 @@ const renderWithQuery = (
   )
 }
 
+export const wrapper = ({ children }) => (
+  <QueryClientProvider client={createTestQueryClient()}>{children}</QueryClientProvider>
+)
+
 // re-export everything
 export * from '@testing-library/react'
 

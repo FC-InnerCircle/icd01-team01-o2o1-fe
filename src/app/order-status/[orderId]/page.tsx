@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation'
 import OrderStatusTrack from './_components/OrderStatusTrack'
 import OrderDetail from './_components/OrderDetail'
 import OrderTrackMap from './_components/OrderTrackMap'
+import OrderStatusSkeleton from './_components/OrderStatusSkeleton'
+import BackButton from '@/components/shared/BackButton'
 
 export default function OrderStatusPage() {
   const router = useRouter()
@@ -14,11 +16,16 @@ export default function OrderStatusPage() {
   const { data, isLoading } = useOrderStatus()
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <OrderStatusSkeleton />
   }
 
   if (!data) {
-    return <div>Order not found</div>
+    return (
+      <div>
+        <BackButton />
+        <div className="flex items-center justify-center">Order not found</div>
+      </div>
+    )
   }
 
   const { response } = data

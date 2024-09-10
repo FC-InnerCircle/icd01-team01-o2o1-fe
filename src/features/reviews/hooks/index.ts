@@ -1,5 +1,4 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { useEffect } from 'react'
 import { getReviews } from '../api'
 
 export const useStoreReviewInfiniteQuery = (storeId: string) => {
@@ -11,24 +10,12 @@ export const useStoreReviewInfiniteQuery = (storeId: string) => {
     staleTime: 0,
   })
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY + window.innerHeight >= document.body.scrollHeight && hasNextPage) {
-        fetchNextPage()
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll)
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [fetchNextPage, hasNextPage])
-
   return {
     storeName: data?.pages[0].response.storeName,
     pages: data?.pages,
     isFetchingNextPage,
     isLoading,
+    fetchNextPage,
+    hasNextPage,
   }
 }

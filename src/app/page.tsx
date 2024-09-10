@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 
 // third party
 import { cn } from '@/lib/utils'
-import { useSignIn } from '@/features/auth/hooks'
+import { useSignIn } from '@/features/auth/hooks/useSignIn'
 
 export default function LoginPage() {
   const { signInKakao, isLoading } = useSignIn()

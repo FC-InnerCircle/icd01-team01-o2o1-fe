@@ -1,12 +1,12 @@
 import React from 'react'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import CreateMemberForm from './CreateMemberForm'
 import { useForm } from 'react-hook-form'
 import {
   CreateMemberFormDataType,
   createMemberFormSchema,
-} from '@/features/member/hooks/useCreateMeberForm'
+} from '@/features/member/hooks/useCreateMemberForm'
 import { zodResolver } from '@hookform/resolvers/zod'
 const TestWrapper = () => {
   const form = useForm<CreateMemberFormDataType>({
@@ -15,11 +15,10 @@ const TestWrapper = () => {
     defaultValues: {
       nickName: '',
       contact: '',
-      address: '',
-      detailAddress: '',
+      addressDetail: '',
     },
   })
-  return <CreateMemberForm form={form} />
+  return <CreateMemberForm form={form} setAddress={() => {}} />
 }
 
 describe('CreateMemberForm', () => {

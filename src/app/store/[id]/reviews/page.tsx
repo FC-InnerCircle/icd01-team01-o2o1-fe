@@ -4,7 +4,7 @@ import { useStoreReviewInfiniteQuery } from '@/features/reviews/hooks'
 import { ArrowLeftIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 export default function StoreReviewPage() {
   const params = useParams<{
@@ -13,7 +13,23 @@ export default function StoreReviewPage() {
 
   const router = useRouter()
 
-  const { pages, storeName, isLoading } = useStoreReviewInfiniteQuery(params?.id || '')
+  const { pages, storeName, isLoading, fetchNextPage, hasNextPage } = useStoreReviewInfiniteQuery(
+    params?.id || '',
+  )
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY + window.innerHeight >= document.body.scrollHeight && hasNextPage) {
+        fetchNextPage()
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [fetchNextPage, hasNextPage])
 
   return (
     <div className="pb-20">

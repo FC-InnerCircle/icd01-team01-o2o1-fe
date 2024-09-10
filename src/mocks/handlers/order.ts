@@ -1,77 +1,150 @@
 import { BASE_URL } from '@/constants/api'
-import { http, HttpResponse } from 'msw'
+import { delay, http, HttpResponse } from 'msw'
 
 const encoder = new TextEncoder()
 
-export const orderHandlers = [
-  http.get(`${BASE_URL}/order/pending`, () => {
-    return HttpResponse.json({
-      response: {
-        orderId: 1,
-        orderTime: '2024-08-24 09:15',
-        orderStatus: 'pending',
-        orderPrice: 35500,
-        store: {
-          storeId: 2,
-          storeName: '홍길동 한식당',
-          storeAddress: {
-            latitude: 37.5665,
-            longitude: 126.978,
-            address: '서울시 블라',
-            addressDetail: '몇동 몇호',
-            zipCode: '12345',
-          },
-        },
-        menus: [
+export const orderStatus = [
+  {
+    courierId: 123,
+    latitude: 37.5665,
+    longitude: 126.978,
+    timestamp: '2024-08-22T10:00:00.000Z',
+  },
+  {
+    courierId: 123,
+    latitude: 37.56652,
+    longitude: 126.9782,
+    timestamp: '2024-08-22T10:01:00.000Z',
+  },
+  {
+    courierId: 123,
+    latitude: 37.56654,
+    longitude: 126.9784,
+    timestamp: '2024-08-22T10:02:00.000Z',
+  },
+  {
+    courierId: 123,
+    latitude: 37.56656,
+    longitude: 126.9786,
+    timestamp: '2024-08-22T10:03:00.000Z',
+  },
+  {
+    courierId: 123,
+    latitude: 37.56658,
+    longitude: 126.9788,
+    timestamp: '2024-08-22T10:04:00.000Z',
+  },
+  {
+    courierId: 123,
+    latitude: 37.5666,
+    longitude: 126.979,
+    timestamp: '2024-08-22T10:05:00.000Z',
+  },
+  {
+    courierId: 123,
+    latitude: 37.56662,
+    longitude: 126.9792,
+    timestamp: '2024-08-22T10:06:00.000Z',
+  },
+  {
+    courierId: 123,
+    latitude: 37.56664,
+    longitude: 126.9794,
+    timestamp: '2024-08-22T10:07:00.000Z',
+  },
+  {
+    courierId: 123,
+    latitude: 37.56666,
+    longitude: 126.9796,
+    timestamp: '2024-08-22T10:08:00.000Z',
+  },
+  {
+    courierId: 123,
+    latitude: 37.56668,
+    longitude: 126.9798,
+    timestamp: '2024-08-22T10:09:00.000Z',
+  },
+  {
+    courierId: 123,
+    latitude: 37.5667,
+    longitude: 126.98,
+    timestamp: '2024-08-22T10:10:00.000Z',
+  },
+]
+
+export const mockOrderResponse = {
+  response: {
+    orderId: 1,
+    orderTime: '2024-08-24 09:15',
+    orderStatus: 'pending',
+    orderPrice: 35500,
+    store: {
+      storeId: 2,
+      storeName: '홍길동 한식당',
+      storeAddress: {
+        latitude: 37.5665,
+        longitude: 126.978,
+        address: '서울시 블라',
+        addressDetail: '몇동 몇호',
+        zipCode: '12345',
+      },
+    },
+    menus: [
+      {
+        menuId: 2,
+        menuName: '치킨',
+        menuCount: 1,
+        optionGroup: [
           {
-            menuId: 2,
-            menuName: '치킨',
-            menuCount: 1,
-            optionGroup: [
+            optionGroupId: 2,
+            optionGroupName: '야채',
+            option: [
               {
-                optionGroupId: 2,
-                optionGroupName: '야채',
-                option: [
-                  {
-                    optionId: 2,
-                    optionName: '파 추가',
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            menuId: 3,
-            menuName: '치킨무',
-            menuCount: 1,
-            optionGroup: [
-              {
-                optionGroupId: 3,
-                optionGroupName: '야채',
-                option: [
-                  {
-                    optionId: 4,
-                    optionName: '파 추가',
-                  },
-                ],
+                optionId: 2,
+                optionName: '파 추가',
               },
             ],
           },
         ],
-        orderAddress: {
-          addressId: 2,
-          latitude: 37.5667,
-          longitude: 126.98,
-          address: '서울시 블라',
-          addressDetail: '몇동 몇호',
-          zipCode: '12345',
-        },
       },
-      statusCode: 200,
-      msg: 'success',
-    })
+      {
+        menuId: 3,
+        menuName: '치킨무',
+        menuCount: 1,
+        optionGroup: [
+          {
+            optionGroupId: 3,
+            optionGroupName: '야채',
+            option: [
+              {
+                optionId: 4,
+                optionName: '파 추가',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    orderAddress: {
+      addressId: 2,
+      latitude: 37.5667,
+      longitude: 126.98,
+      address: '서울시 블라',
+      addressDetail: '몇동 몇호',
+      zipCode: '12345',
+    },
+  },
+  statusCode: 200,
+  msg: 'success',
+}
+
+export const orderHandlers = [
+  http.get(`${BASE_URL}/order/pending`, async () => {
+    await delay(1000)
+    return HttpResponse.json(mockOrderResponse)
   }),
-  http.delete(`${BASE_URL}/order/pending`, () => {
+  http.delete(`${BASE_URL}/order/pending`, async () => {
+    await delay(1000)
     return HttpResponse.json({
       response: {
         orderId: 2,
@@ -139,75 +212,6 @@ export const orderHandlers = [
     const stream = new ReadableStream({
       start(controller) {
         let counter = 0
-
-        const orderStatus = [
-          {
-            courierId: 123,
-            latitude: 37.5665,
-            longitude: 126.978,
-            timestamp: '2024-08-22T10:00:00.000Z',
-          },
-          {
-            courierId: 123,
-            latitude: 37.56652,
-            longitude: 126.9782,
-            timestamp: '2024-08-22T10:01:00.000Z',
-          },
-          {
-            courierId: 123,
-            latitude: 37.56654,
-            longitude: 126.9784,
-            timestamp: '2024-08-22T10:02:00.000Z',
-          },
-          {
-            courierId: 123,
-            latitude: 37.56656,
-            longitude: 126.9786,
-            timestamp: '2024-08-22T10:03:00.000Z',
-          },
-          {
-            courierId: 123,
-            latitude: 37.56658,
-            longitude: 126.9788,
-            timestamp: '2024-08-22T10:04:00.000Z',
-          },
-          {
-            courierId: 123,
-            latitude: 37.5666,
-            longitude: 126.979,
-            timestamp: '2024-08-22T10:05:00.000Z',
-          },
-          {
-            courierId: 123,
-            latitude: 37.56662,
-            longitude: 126.9792,
-            timestamp: '2024-08-22T10:06:00.000Z',
-          },
-          {
-            courierId: 123,
-            latitude: 37.56664,
-            longitude: 126.9794,
-            timestamp: '2024-08-22T10:07:00.000Z',
-          },
-          {
-            courierId: 123,
-            latitude: 37.56666,
-            longitude: 126.9796,
-            timestamp: '2024-08-22T10:08:00.000Z',
-          },
-          {
-            courierId: 123,
-            latitude: 37.56668,
-            longitude: 126.9798,
-            timestamp: '2024-08-22T10:09:00.000Z',
-          },
-          {
-            courierId: 123,
-            latitude: 37.5667,
-            longitude: 126.98,
-            timestamp: '2024-08-22T10:10:00.000Z',
-          },
-        ]
 
         function push() {
           if (counter < 10) {

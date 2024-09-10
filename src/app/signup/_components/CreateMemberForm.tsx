@@ -2,13 +2,16 @@ import React from 'react'
 import { Form } from '@/components/ui/form'
 import InputFormItem from '@/components/shared/InputFormItem'
 import { UseFormReturn } from 'react-hook-form'
-import { CreateMemberFormDataType } from '@/features/member/hooks/useCreateMeberForm'
+import AddressInput from '@/components/shared/AddressInput'
+import { CreateMemberFormDataType } from '@/features/member/hooks/useCreateMemberForm'
+import { Address } from '@/features/member/types'
 
 interface CreateMemberFormProps {
   form: UseFormReturn<CreateMemberFormDataType>
+  setAddress: (address: Address) => void
 }
 
-const CreateMemberForm = ({ form }: CreateMemberFormProps) => {
+const CreateMemberForm = ({ form, setAddress }: CreateMemberFormProps) => {
   return (
     <>
       <Form {...form}>
@@ -27,15 +30,15 @@ const CreateMemberForm = ({ form }: CreateMemberFormProps) => {
             placeholder="연락처를 입력해주세요"
             required
           />
-          <InputFormItem
+          <AddressInput
             name="address"
             control={form.control}
             label="주소"
-            placeholder="도로명, 지번 또는 건물명으로 검색"
+            setAddress={setAddress}
             required
           />
           <InputFormItem
-            name="detailAddress"
+            name="addressDetail"
             control={form.control}
             label="상세 주소"
             placeholder="상세 주소를 입력해주세요"

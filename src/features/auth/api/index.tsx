@@ -1,7 +1,11 @@
 import axiosInst from '@/util/axiosInst'
 
 type SignUpResponseType = {
-  isSignup: boolean
+  response: {
+    isSignup: false
+  }
+  statusCode: number
+  msg: string
 }
 
 export const OAuthLogin = async ({
@@ -13,7 +17,7 @@ export const OAuthLogin = async ({
   subId: string
   name: string
 }) => {
-  const { data } = await axiosInst.post<SignUpResponseType>(
+  const { data } = await axiosInst.post<Promise<SignUpResponseType>>(
     '/login',
     {
       snsType: 'kakao',

@@ -5,13 +5,13 @@ import LoginPage from './page'
 
 import { render } from '@/util/test-utils'
 import { useRouter } from 'next/navigation'
-import { useSignIn } from '@/features/auth/hooks'
+import { useSignIn } from '@/features/auth/hooks/useSignIn'
 
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
 }))
 
-jest.mock('../features/auth/hooks', () => ({
+jest.mock('../features/auth/hooks/useSignIn', () => ({
   useSignIn: jest.fn(),
 }))
 

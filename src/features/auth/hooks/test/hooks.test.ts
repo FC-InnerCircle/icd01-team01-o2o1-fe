@@ -1,7 +1,7 @@
 import { renderHook, act, waitFor } from '@testing-library/react'
 import { useRouter } from 'next/navigation'
-import { useSignUp } from '../hooks'
 import { useMutation } from '@tanstack/react-query'
+import { useSignUp } from '../useSignup'
 
 // Mocks
 jest.mock('next/navigation', () => ({
@@ -20,7 +20,7 @@ describe('useSignUp hook', () => {
     jest.clearAllMocks()
   })
 
-  it('isSignup true일때 home으로 이동', async () => {
+  it('isSignup false -> signup으로 이동', async () => {
     const mockPush = jest.fn()
     ;(useRouter as jest.Mock).mockReturnValue({ push: mockPush })
     let onSuccessCallback: (data: any) => void
@@ -35,12 +35,12 @@ describe('useSignUp hook', () => {
       onSuccessCallback = onSuccess
       return {
         mutate: mockMutate,
-        isSuccess: false,
+        isSuccess: true,
         isError: false,
       }
     })
 
-    mockKakaoLogin.mockResolvedValue({ isSignup: true })
+    mockKakaoLogin.mockResolvedValue({ response: { isSignup: false } })
 
     const { result } = renderHook(() => useSignUp())
 
@@ -55,7 +55,7 @@ describe('useSignUp hook', () => {
     })
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/home')
+      expect(mockPush).toHaveBeenCalledWith('/signup')
     })
   })
 })
