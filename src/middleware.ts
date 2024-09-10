@@ -14,7 +14,7 @@ export async function middleware(req: NextRequest) {
 
   // 루트 페이지를 제외한 모든 페이지에서 인증 필요
   if (!session) {
-    // 로그인 페이지로의 무한 리디렉션 방지
+    // 무한 리디렉션 방지
     if (path === '/') {
       return NextResponse.next()
     }
@@ -34,5 +34,6 @@ export async function middleware(req: NextRequest) {
 
 // 미들웨어를 적용할 경로 설정
 export const config = {
+  // 정규표현식을 사용하여 public 경로를 제외한 모든 경로에 미들웨어 적용
   matcher: ['/((?!api|_next/static|_next/image|favicon.ico|mockServiceWorker.js).*)'],
 }
