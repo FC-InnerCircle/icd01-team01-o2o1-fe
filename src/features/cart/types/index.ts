@@ -18,7 +18,7 @@ export interface Option {
   optionPrice: number
 }
 
-export interface CartState {
+export interface useManageCartStoreState {
   storeId: number | null
   setStoreId: (storeId: number | null) => void
   storeName: string | null
@@ -27,6 +27,15 @@ export interface CartState {
   setMenus: (menus: MenuType[]) => void
   isHydrated: boolean
   setHydrated: (hydrated: boolean) => void
+  deleteMenuFromCart: (menuId: number) => void
+  getMenuPriceWithTotalOption: (
+    menuPrice: number | null,
+    totalOptionPrice: number,
+    menuCount: number,
+  ) => string
+  changeMenuStock: (menuId: number, n: number) => void
+  getTotalOptionPrice: (optionGroups: OptionGroup[]) => number
+  getTotalOrderPrice: () => number
 }
 
 export interface AddressType {

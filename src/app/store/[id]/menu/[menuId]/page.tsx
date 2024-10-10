@@ -9,18 +9,24 @@ import { useGetStoreDetailInfo } from '@/features/store/hooks/useGetStoreDetailI
 import { useParams } from 'next/navigation'
 import { useToast } from '@/hooks/useToast'
 import { useMenuSelectStore } from '@/features/menu/hooks/useMenuSelectHook'
-import { useManageCart } from '@/features/cart/hooks/useManageCart'
+import { useManageCartStore } from '@/features/cart/hooks/useManageCartStore'
 import { MenuType } from '@/features/cart/types'
 import { useRouter } from 'next/navigation'
 
 const Page = () => {
   const router = useRouter()
-  const { optionGroups, menuCount, menuPrice } = useMenuSelectStore()
+  const { optionGroups, menuCount, menuPrice, reset } = useMenuSelectStore()
   const { data, isLoading } = useGetStoreDetailInfo()
   const params = useParams<{
     menuId: string
   }>()
   const { toast } = useToast()
+
+  useEffect(() => {
+    return () => {
+      reset()
+    }
+  }, [reset])
 
   const handleAddCart = () => {
     const menuInfo = data?.menus.find((menu) => menu.menuId === Number(params.menuId))
@@ -47,7 +53,7 @@ const Page = () => {
 
     // 카트 상태 가져오기
     const { storeId, storeName, setStoreId, setStoreName, setMenus, menus } =
-      useManageCart.getState()
+      useManageCartStore.getState()
 
     // 카트가 비어 있을 때: 메뉴 추가
     const newMenu: MenuType = {

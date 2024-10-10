@@ -2,7 +2,7 @@
 import { X } from 'lucide-react'
 import AddressInfo from './_components/AddressInfo'
 import SelectedMenuList from './_components/SelectedMenuList'
-import { useManageCart, useGetTotalOrderPrice } from '@/features/cart/hooks/useManageCart'
+import { useManageCartStore } from '@/features/cart/hooks/useManageCartStore'
 import { useGetMainAddress } from '@/features/address/query'
 import { useRouter } from 'next/navigation'
 import useOrderMenu from '@/features/cart/hooks/useOrderMenu'
@@ -15,11 +15,12 @@ const CartPage = () => {
   const { toast } = useToast()
   const { mutate: order } = useOrderMenu()
   const { data: address } = useGetMainAddress()
-  const { isHydrated } = useManageCart((state) => ({
+  const { isHydrated, getTotalOrderPrice } = useManageCartStore((state) => ({
     isHydrated: state.isHydrated,
+    getTotalOrderPrice: state.getTotalOrderPrice,
   }))
-  const totalOrderPrice = useGetTotalOrderPrice()
-  const formattedAddress = useGetAddressForOrder(address as AddressData)
+
+  const addressForOrder = useGetAddressForOrder(address as AddressData) // 훅을 컴포넌트 최상단에서 호출
 
   if (!isHydrated) {
     // Avoid rendering until the state is hydrated to prevent hydration mismatch
@@ -27,7 +28,7 @@ const CartPage = () => {
   }
 
   const useHandleOrder = () => {
-    const { storeId, storeName, menus } = useManageCart.getState()
+    const { storeId, storeName, menus } = useManageCartStore.getState()
 
     if (storeId === null || storeName === null) {
       toast({
@@ -42,9 +43,9 @@ const CartPage = () => {
       storeId,
       storeName,
       menus,
-      orderPrice: totalOrderPrice,
+      orderPrice: getTotalOrderPrice(),
       payment: 'card',
-      address: formattedAddress,
+      address: addressForOrder, // 여기에서 바로 사용
     }
 
     order(formData)
@@ -75,8 +76,8 @@ const CartPage = () => {
           className="w-full max-w-[480px] rounded bg-[#0FA5FA] pb-[52px] pt-[24px] text-white"
           onClick={useHandleOrder}
         >
-          {totalOrderPrice > 0
-            ? `배달 주문 ${totalOrderPrice.toLocaleString()}원 결제하기`
+          {getTotalOrderPrice() > 0
+            ? `배달 주문 ${getTotalOrderPrice().toLocaleString()}원 결제하기`
             : '메뉴를 선택해주세요.'}
         </button>
       </div>

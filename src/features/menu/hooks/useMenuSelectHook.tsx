@@ -4,9 +4,12 @@ interface MenuSelectState {
   menuPrice: number | null
   setMenuPrice: (menuPrice: number) => void
   menuCount: number
-  setMenuCount: (n: number, menuPrice: number) => void
+  setMenuCount: (n: number) => void
   optionGroups: OptionGroup[]
   setOptionGroups: (optionGroups: OptionGroup[]) => void
+  perMenuPrice: number | null
+  setPerMenuPrice: (perMenuPrice: number) => void
+  reset: () => void
 }
 
 interface OptionGroup {
@@ -25,18 +28,21 @@ export const useMenuSelectStore = create<MenuSelectState>((set) => ({
   menuPrice: null,
   setMenuPrice: (menuPrice: number) => set({ menuPrice }),
   menuCount: 1,
-  setMenuCount: (n: number, menuPrice: number) =>
+  setMenuCount: (n: number) =>
     set((state) => {
       if (n === -1 && state.menuCount === 1) return state
 
       const newMenuCount = Math.max(1, state.menuCount + n)
-      const newMenuPrice = state.menuPrice !== null ? newMenuCount * menuPrice : null
+      const newPerMenuPrice = newMenuCount * Number(state.perMenuPrice)
 
       return {
         menuCount: newMenuCount,
-        menuPrice: newMenuPrice,
+        perMenuPrice: newPerMenuPrice,
       }
     }),
   optionGroups: [],
   setOptionGroups: (optionGroups: OptionGroup[]) => set({ optionGroups }),
+  perMenuPrice: null,
+  setPerMenuPrice: (perMenuPrice: number) => set({ perMenuPrice }),
+  reset: () => set({ menuPrice: null, menuCount: 1, optionGroups: [] }),
 }))
