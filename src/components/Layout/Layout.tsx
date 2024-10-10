@@ -5,6 +5,7 @@ import { House, Search, FileCheck, CircleUserRound } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { SessionProvider } from 'next-auth/react'
 import QueryProvider from '@/context/QueryProvider'
+import CartIcon from './_components/CartIcon'
 
 export const linkList = [
   {
@@ -21,6 +22,11 @@ export const linkList = [
     href: '/order',
     icon: <FileCheck size={24} />,
     text: '주문',
+  },
+  {
+    href: '/cart',
+    icon: <CartIcon />,
+    text: '카트',
   },
   {
     href: '/my',
