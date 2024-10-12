@@ -56,15 +56,16 @@ export default function Home() {
             pages.map((page, i: number) => {
               return page.data?.map((store: Store, index: number) => {
                 const storeIndex = index + i * 10
-                
-              return scrollPos < CARD_HEIGHT * (storeIndex + 1 + NODE_PADDING) + TOP_BAR_HEIGHT &&
-                scrollPos + window.innerHeight > CARD_HEIGHT * (storeIndex - 1 - NODE_PADDING) ? (
-                <StoreCard key={store.storeName} store={store} />
-              ) : (
-                <div className="h-[276px] w-full bg-gray-300"></div>
-              )
-            })
-          })}
+
+                return scrollPos < CARD_HEIGHT * (storeIndex + 1 + NODE_PADDING) + TOP_BAR_HEIGHT &&
+                  scrollPos + window.innerHeight > CARD_HEIGHT * (storeIndex - 1 - NODE_PADDING) ? (
+                  <StoreCard key={store.storeName} store={store} />
+                ) : (
+                  <div className="h-[276px] w-full bg-gray-300"></div>
+                )
+              })
+            })}
+        </div>
       </div>
     </PullToRefresh>
   )
