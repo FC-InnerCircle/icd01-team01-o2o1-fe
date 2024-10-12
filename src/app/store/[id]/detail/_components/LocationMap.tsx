@@ -2,8 +2,8 @@
 
 import { Map } from 'react-kakao-maps-sdk'
 import { useGetStoreDetailInfo } from '@/features/store/hooks/useGetStoreDetailInfo'
-import OrderTrackItem from '@/app/order-status/[orderId]/_components/OrderTrackItem'
 import { Skeleton } from '@/components/ui/skeleton'
+import StoreLocationItem from './StoreLocationItem'
 
 const LocationMap = () => {
   const { data, isLoading } = useGetStoreDetailInfo()
@@ -20,7 +20,7 @@ const LocationMap = () => {
     <Skeleton className="h-[240px] w-full bg-gray-200" />
   ) : (
     <Map center={mapCenter} className="relative h-[240px] w-full bg-gray-200" level={4}>
-      <OrderTrackItem lat={mapCenter.lat} lng={mapCenter.lng} type="store" />
+      <StoreLocationItem lat={mapCenter.lat} lng={mapCenter.lng} />
     </Map>
   )
 }

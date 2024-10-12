@@ -3,24 +3,12 @@
 import { X } from 'lucide-react'
 
 import { MenuType } from '@/features/cart/types'
-import {
-  useDeleteMenuFromCart,
-  useGetMenuPriceWithTotalOption,
-  useChangeMenuStock,
-} from '@/features/cart/hooks/useManageCart'
+import { useManageCartStore } from '@/features/cart/hooks/useManageCartStore'
 import { PlusButton, CartMinusButton } from '@/components/shared/StockChangeButton'
 
 const MenuCard = ({ menuName, menuPrice, menuCount, optionGroups, menuId }: MenuType) => {
-  const totalOptionPrice = optionGroups.reduce(
-    (total: any, group: any) =>
-      total +
-      group.options.reduce((groupTotal: any, option: any) => groupTotal + option.optionPrice, 0),
-    0,
-  )
-
-  const useDeleteMenu = () => useDeleteMenuFromCart(menuId)
-  const useIncreaseStock = () => useChangeMenuStock(menuId, 1)
-  const useDecreaseStock = () => useChangeMenuStock(menuId, -1)
+  const { deleteMenuFromCart, changeMenuStock, getMenuPriceWithTotalOption, getTotalOptionPrice } =
+    useManageCartStore()
 
   return (
     <article aria-label="Menu Card">
@@ -44,21 +32,21 @@ const MenuCard = ({ menuName, menuPrice, menuCount, optionGroups, menuId }: Menu
             ))}
           </ul>
           <p className="text-base/[18px]" aria-label="Total Price">
-            {useGetMenuPriceWithTotalOption(menuPrice, totalOptionPrice, menuCount)}원
+            {getMenuPriceWithTotalOption(menuPrice, getTotalOptionPrice(optionGroups), menuCount)}원
           </p>
         </header>
         <footer className="flex flex-col justify-between">
           <button
             aria-label="Remove Menu Item"
             className="flex justify-end"
-            onClick={useDeleteMenu}
+            onClick={() => deleteMenuFromCart(menuId)}
           >
             <X />
           </button>
           <div className="flex items-center gap-3">
-            <CartMinusButton menuStock={menuCount} onClick={useDecreaseStock} />
+            <CartMinusButton menuStock={menuCount} onClick={() => changeMenuStock(menuId, -1)} />
             <span className="w-4 text-center">{menuCount}</span>
-            <PlusButton onClick={useIncreaseStock} />
+            <PlusButton onClick={() => changeMenuStock(menuId, 1)} />
           </div>
         </footer>
       </section>

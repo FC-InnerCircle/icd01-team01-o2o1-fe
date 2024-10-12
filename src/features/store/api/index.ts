@@ -17,7 +17,8 @@ export interface StoreListRequest {
 
 export const getStoreList = async (req: StoreListRequest) => {
   const res = await axiosInst.post(`/store`, {
-    ...req,
+    latitude: req.address.latitude,
+    longitude: req.address.longitude,
   })
   const { page, size, totalCount } = res.data
 

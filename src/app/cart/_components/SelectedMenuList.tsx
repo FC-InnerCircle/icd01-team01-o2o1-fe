@@ -2,12 +2,12 @@
 
 import { useRouter } from 'next/navigation'
 import MenuCard from './MenuCard'
-import { useManageCart } from '@/features/cart/hooks/useManageCart'
+import { useManageCartStore } from '@/features/cart/hooks/useManageCartStore'
 
 const SelectedMenuList = () => {
   const router = useRouter()
 
-  const { storeId, storeName, menus, isHydrated } = useManageCart((state) => ({
+  const { storeId, storeName, menus, isHydrated } = useManageCartStore((state) => ({
     storeId: state.storeId,
     storeName: state.storeName,
     menus: state.menus,

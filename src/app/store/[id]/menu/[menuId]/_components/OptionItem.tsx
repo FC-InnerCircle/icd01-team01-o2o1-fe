@@ -21,7 +21,7 @@ const OptionItem = ({
   optionGroupName,
   isMultiple,
 }: OptionItemProps) => {
-  const { optionGroups, setOptionGroups } = useMenuSelectStore()
+  const { optionGroups, setOptionGroups, perMenuPrice, setPerMenuPrice } = useMenuSelectStore()
 
   // 현재 그룹에서 선택된 옵션이 있는지 확인
   const isSelected = optionGroups.some(
