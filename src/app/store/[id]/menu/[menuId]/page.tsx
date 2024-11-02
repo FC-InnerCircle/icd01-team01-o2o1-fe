@@ -79,15 +79,22 @@ const Page = () => {
       return
     }
 
-    // 이미 같은 menuId가 카트에 있는지 확인
-    const isMenuInCart = menus?.some((menu) => menu.menuId === newMenu.menuId)
+    const existingMenuIndex = menus.findIndex(
+      (menu) =>
+        menu.menuId === newMenu.menuId &&
+        JSON.stringify(menu.optionGroups) === JSON.stringify(newMenu.optionGroups),
+    )
 
-    if (isMenuInCart) {
+    if (existingMenuIndex !== -1) {
+      const updatedMenus = [...menus]
+      updatedMenus[existingMenuIndex].menuCount += menuCount
+      setMenus(updatedMenus)
+
       toast({
-        variant: 'destructive',
-        title: '이미 같은 메뉴가 카트에 있습니다',
+        title: '메뉴 수량이 업데이트되었습니다',
         duration: 1500,
       })
+      router.push('/cart')
       return
     }
 

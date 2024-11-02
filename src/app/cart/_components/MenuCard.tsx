@@ -2,11 +2,18 @@
 
 import { X } from 'lucide-react'
 
-import { MenuType } from '@/features/cart/types'
+import { CartMenuType } from '@/features/cart/types'
 import { useManageCartStore } from '@/features/cart/hooks/useManageCartStore'
 import { PlusButton, CartMinusButton } from '@/components/shared/StockChangeButton'
 
-const MenuCard = ({ menuName, menuPrice, menuCount, optionGroups, menuId }: MenuType) => {
+const MenuCard = ({
+  menuName,
+  menuPrice,
+  menuCount,
+  optionGroups,
+  menuId,
+  order,
+}: CartMenuType) => {
   const { deleteMenuFromCart, changeMenuStock, getMenuPriceWithTotalOption, getTotalOptionPrice } =
     useManageCartStore()
 
@@ -39,14 +46,14 @@ const MenuCard = ({ menuName, menuPrice, menuCount, optionGroups, menuId }: Menu
           <button
             aria-label="Remove Menu Item"
             className="flex justify-end"
-            onClick={() => deleteMenuFromCart(menuId)}
+            onClick={() => deleteMenuFromCart(order)}
           >
             <X />
           </button>
           <div className="flex items-center gap-3">
-            <CartMinusButton menuStock={menuCount} onClick={() => changeMenuStock(menuId, -1)} />
+            <CartMinusButton menuStock={menuCount} onClick={() => changeMenuStock(order, -1)} />
             <span className="w-4 text-center">{menuCount}</span>
-            <PlusButton onClick={() => changeMenuStock(menuId, 1)} />
+            <PlusButton onClick={() => changeMenuStock(order, 1)} />
           </div>
         </footer>
       </section>
