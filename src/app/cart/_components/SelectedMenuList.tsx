@@ -34,7 +34,7 @@ const SelectedMenuList = () => {
         <div>{storeName}</div>
       </div>
       {menus.length > 0 ? (
-        menus?.map((e) => <MenuCard key={e.menuId} {...e} />)
+        menus?.map((e, i) => <MenuCard key={e.menuId} order={i} {...e} />)
       ) : (
         <div className="flex justify-center py-7">
           <div className="text-center align-middle text-base/[18px] text-[#0FA5FA]">

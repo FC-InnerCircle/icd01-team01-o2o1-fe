@@ -6,6 +6,10 @@ export interface MenuType {
   optionGroups: OptionGroup[]
 }
 
+export interface CartMenuType extends MenuType {
+  order: number
+}
+
 export interface OptionGroup {
   optionGroupId: number
   optionGroupName: string
@@ -27,13 +31,13 @@ export interface useManageCartStoreState {
   setMenus: (menus: MenuType[]) => void
   isHydrated: boolean
   setHydrated: (hydrated: boolean) => void
-  deleteMenuFromCart: (menuId: number) => void
+  deleteMenuFromCart: (order: number) => void
   getMenuPriceWithTotalOption: (
     menuPrice: number | null,
     totalOptionPrice: number,
     menuCount: number,
   ) => string
-  changeMenuStock: (menuId: number, n: number) => void
+  changeMenuStock: (order: number, n: number) => void
   getTotalOptionPrice: (optionGroups: OptionGroup[]) => number
   getTotalOrderPrice: () => number
 }

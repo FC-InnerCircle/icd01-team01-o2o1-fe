@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { useManageCartStoreState } from '@/features/cart/types'
-import { OptionGroup } from '@/features/cart/types'
+import { OptionGroup, MenuType } from '@/features/cart/types'
 
 export const useManageCartStore = create<useManageCartStoreState>()(
   persist(
@@ -14,9 +14,9 @@ export const useManageCartStore = create<useManageCartStoreState>()(
       setStoreName: (storeName: string | null) => set({ storeName }),
       setMenus: (menus: any[]) => set({ menus }),
       setHydrated: (hydrated: boolean) => set({ isHydrated: hydrated }),
-      deleteMenuFromCart: (menuId: number) => {
+      deleteMenuFromCart: (order: number) => {
         const { setMenus, menus, setStoreId, setStoreName } = get()
-        const newMenus = menus.filter((menu) => menu.menuId !== menuId)
+        const newMenus = menus.filter((_, index) => index !== order)
         setMenus(newMenus)
         if (newMenus.length === 0) {
           setStoreId(null)
@@ -30,25 +30,23 @@ export const useManageCartStore = create<useManageCartStoreState>()(
       ) => {
         return ((Number(menuPrice) + totalOptionPrice) * menuCount).toLocaleString()
       },
-      changeMenuStock: (menuId: number, n: number) => {
+      changeMenuStock: (order: number, n: number) => {
         const { setMenus, menus, setStoreId, setStoreName } = get()
-        const updatedMenus = menus.map((menu) => {
-          if (menu.menuId === menuId) {
-            return {
-              ...menu,
-              menuCount: menu.menuCount + n, // n은 재고의 변경량
+        // order에 해당하는 메뉴의 수량 변경 및 0 이하인 경우 필터링
+        const updatedMenus = menus
+          .map((menu, index) => {
+            if (index === order) {
+              const updatedCount = menu.menuCount + n
+              return updatedCount > 0 ? { ...menu, menuCount: updatedCount } : null
             }
-          }
-          return menu
-        })
+            return menu
+          })
+          .filter((menu): menu is MenuType => menu !== null) // null 제거 후 타입 좁히기
+
         setMenus(updatedMenus)
-        if (updatedMenus.some((menu) => menu.menuId === menuId && menu.menuCount <= 0)) {
-          const filteredMenus = updatedMenus.filter((menu) => menu.menuId !== menuId)
-          setMenus(filteredMenus)
-          if (filteredMenus.length === 0) {
-            setStoreId(null)
-            setStoreName(null)
-          }
+        if (updatedMenus.length === 0) {
+          setStoreId(null)
+          setStoreName(null)
         }
       },
       getTotalOptionPrice: (optionGroups: OptionGroup[]) => {
